@@ -1,18 +1,30 @@
 
 
 <form formGroup="addNewPhotoForm" >
-    <div>
+    <!-- <div>
         <label for="photo-add">Add Photo</label>
         <input type="file" name="Add Photo" id="photo-add" />
-    </div>
+    </div> -->
 
+    <div>
+        <label for="add-photo-url">Add Photo Url</label>
+        <input type="url" name="photo-url" id="add-photo-url">
+    </div>
     <div>
         <label for="new-photo-name">Add Name</label>
         <input type="text" name="Photo Name" id="new-photo-name" />
     </div>
+    <button type="submit" (click)="saveForm()">Save</button>
 </form>
 
 <div class="photo-view">
     <label for="photo-img">Denali and Wonder Lake</label>
     <img id="photo-img" src="/assets/photos/Ansel-Adams-Denali-and-Wonder-Lake.webp" alt="Denali and Wonder Lake" />
+</div>
+
+
+<div class="photo-view">
+    <input type="url" id="new-photo-url" [(ngModel)]="newPhotoUrl" />
+    <p>you typed: {{newPhotoUrl}}</p>
+    <img src="{{newPhotoUrl}}" alt="your image" />
 </div>
