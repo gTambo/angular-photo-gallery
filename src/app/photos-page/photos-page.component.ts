@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { PhotoService } from '../photo.service';
 
-type PhotoUrl = '' | undefined;
+export type PhotoUrl = '' | undefined;
 
 @Component({
   selector: 'app-photos-page',
@@ -11,6 +12,8 @@ type PhotoUrl = '' | undefined;
 export class PhotosPageComponent {
 
   newPhotoUrl: PhotoUrl;
+
+  photoUrls: PhotoUrl[] = [];
 
   addNewPhotoForm = this.formBuilder.group({
     id: 0,
@@ -22,7 +25,8 @@ export class PhotosPageComponent {
     private formBuilder: FormBuilder,
   ) {}
 
-  saveForm(): void{
+  saveForm(formObject: typeof this.addNewPhotoForm): void{
+    // this.photoUrls.push(formObject.photoUrl);
     alert('you saved the form');
   }
 }
