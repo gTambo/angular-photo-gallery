@@ -1,6 +1,7 @@
 
 
-<form formGroup="addNewPhotoForm" >
+<form #addNewPhoto="ngForm" >
+    {{ model | json}}
     <!-- <div>
         <label for="photo-add">Add Photo</label>
         <input type="file" name="Add Photo" id="photo-add" />
@@ -8,13 +9,13 @@
 
     <div>
         <label for="add-photo-url">Add Photo Url</label>
-        <input type="url" name="photoUrl" id="add-photo-url">
+        <input type="url" name="photoUrl" id="add-photo-url" [(ngModel)]="model.url">
     </div>
     <div>
         <label for="new-photo-name">Add Name</label>
-        <input type="text" name="photoName" id="new-photo-name" />
+        <input type="text" name="photoName" id="new-photo-name" [(ngModel)]="model.description"/>
     </div>
-    <button type="submit" (click)="saveForm(addNewPhotoForm)">Save</button>
+    <button type="submit" (click)="saveForm()">Save</button>
 </form>
 
 <div class="photo-view">
@@ -27,4 +28,8 @@
     <input type="url" id="new-photo-url" [(ngModel)]="newPhotoUrl" />
     <p>you typed: {{newPhotoUrl}}</p>
     <img src="{{newPhotoUrl}}" alt="your image" />
+</div>
+<div *ngFor="let url of photoUrls" class="photo-view">
+    {{ url | json}}
+    Photo: <img src={{url}} alt="your photo">
 </div>

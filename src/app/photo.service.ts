@@ -5,12 +5,13 @@ import { PhotoUrl } from './photos-page/photos-page.component';
 })
 export class PhotoService {
 
-  photoUrls: PhotoUrl[] = [];
+  photoUrls: string[] = [];
 
   constructor() { }
 
-  addUrls(photoUrl: PhotoUrl) {
+  addUrls(photoUrl: string) {
     this.photoUrls.push(photoUrl);
+    console.log('current photoUrls: ', this.photoUrls);
   }
 
   getUrls() {

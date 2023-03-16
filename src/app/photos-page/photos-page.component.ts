@@ -13,20 +13,29 @@ export class PhotosPageComponent {
 
   newPhotoUrl: PhotoUrl;
 
-  photoUrls: PhotoUrl[] = [];
+  photoUrls: string[] = [];
 
-  addNewPhotoForm = this.formBuilder.group({
-    id: 0,
-    photoUrl: '',
+  // addNewPhotoForm = this.formBuilder.group({
+  //   id: 0,
+  //   photoUrl: '',
+  //   description: ''
+  // });
+
+  addNewPhoto = {
+    url: '',
     description: ''
-  });
+  }
+
+  model = this.addNewPhoto;
 
   constructor(
     private formBuilder: FormBuilder,
+    private photoService: PhotoService,
   ) {}
 
-  saveForm(formObject: typeof this.addNewPhotoForm): void{
-    // this.photoUrls.push(formObject.photoUrl);
+  saveForm(): void{
+    this.photoService.addUrls(this.model.url);
     alert('you saved the form');
+    this.photoUrls = this.photoService.getUrls();
   }
 }
