@@ -25,11 +25,13 @@
 
 
 <div class="photo-view">
-    <input type="url" id="new-photo-url" [(ngModel)]="newPhotoUrl" />
-    <p>you typed: {{newPhotoUrl}}</p>
-    <img src="{{newPhotoUrl}}" alt="your image" />
+    <h2>add new image</h2>
+    <input type="url" id="new-photo-url" [(ngModel)]="model.url" />
+    <h3>Preview</h3>
+    <img src="{{model.url}}" alt="your image" />
 </div>
-<div *ngFor="let url of photoUrls" class="photo-view">
-    {{ url | json}}
-    Photo: <img src={{url}} alt="your photo">
+<div *ngFor="let photo of photos" class="photo-view">
+    <!-- {{ photo | json}} -->
+    Photo: <img src={{photo.url}} alt="your photo">
+    <p>{{photo.description}}</p>
 </div>

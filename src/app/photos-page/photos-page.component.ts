@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { PhotoService } from '../photo.service';
 
-export type PhotoUrl = '' | undefined;
+import { Photo } from '../photo';
 
 @Component({
   selector: 'app-photos-page',
@@ -11,9 +11,9 @@ export type PhotoUrl = '' | undefined;
 })
 export class PhotosPageComponent {
 
-  newPhotoUrl: PhotoUrl;
+  // newPhoto: Photo | undefined;
 
-  photoUrls: string[] = [];
+  photos: Photo[] = [];
 
   // addNewPhotoForm = this.formBuilder.group({
   //   id: 0,
@@ -21,12 +21,13 @@ export class PhotosPageComponent {
   //   description: ''
   // });
 
-  addNewPhoto = {
-    url: '',
-    description: ''
+  addNewPhoto: Photo = {
+    id: 10,
+    url: 'https://www.wildnatureimages.com/images/xl/050612-223-Wolf.jpg',
+    description: 'Wolf (Canis Lupus)'
   }
 
-  model = this.addNewPhoto;
+  model = new Photo('', 'https://www.wildnatureimages.com/images/xl/050612-223-Wolf.jpg', 'Wolf (Canis Lupus)');
 
   constructor(
     private formBuilder: FormBuilder,
@@ -34,8 +35,8 @@ export class PhotosPageComponent {
   ) {}
 
   saveForm(): void{
-    this.photoService.addUrls(this.model.url);
+    this.photoService.addPhoto(this.model);
     alert('you saved the form');
-    this.photoUrls = this.photoService.getUrls();
+    this.photos = this.photoService.getPhotos();
   }
 }

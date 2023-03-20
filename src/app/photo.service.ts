@@ -1,20 +1,22 @@
 import { Injectable } from '@angular/core';
-import { PhotoUrl } from './photos-page/photos-page.component';
+import { Photo } from 'src/app/photo';
 @Injectable({
   providedIn: 'root'
 })
 export class PhotoService {
 
-  photoUrls: string[] = [];
+
+
+  photos: Photo[] = [];
 
   constructor() { }
 
-  addUrls(photoUrl: string) {
-    this.photoUrls.push(photoUrl);
-    console.log('current photoUrls: ', this.photoUrls);
+  addPhoto(photo: Photo) {
+    this.photos.push(photo);
+    console.log('current photoUrls: ', this.photos);
   }
 
-  getUrls() {
-    return this.photoUrls;
+  getPhotos() {
+    return this.photos;
   }
 }
