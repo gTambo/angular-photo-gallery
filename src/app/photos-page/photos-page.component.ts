@@ -30,7 +30,7 @@ export class PhotosPageComponent {
   model = new Photo('', 'https://www.wildnatureimages.com/images/xl/050612-223-Wolf.jpg', 'Wolf (Canis Lupus)');
 
   constructor(
-    private formBuilder: FormBuilder,
+    // private formBuilder: FormBuilder,
     private photoService: PhotoService,
   ) {}
 
