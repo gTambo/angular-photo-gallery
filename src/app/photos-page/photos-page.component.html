@@ -26,8 +26,6 @@
     <img src="{{model.url}}" alt="your image" />
 </div>
 <div *ngFor="let photo of photos" class="photo-view">
-    <!-- {{ photo | json}} -->
     Photo: <img src={{photo.url}} alt="your photo">
-    photo from filepath: <img src="{{photo.filepath}}" alt="filepath">
     <p>{{photo.description}}</p>
 </div>

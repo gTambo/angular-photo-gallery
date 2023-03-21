@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { PhotoService } from '../photo.service';
 
 import { Photo } from '../photo';
@@ -11,15 +10,7 @@ import { Photo } from '../photo';
 })
 export class PhotosPageComponent {
 
-  // newPhoto: Photo | undefined;
-
   photos: Photo[] = [];
-
-  // addNewPhotoForm = this.formBuilder.group({
-  //   id: 0,
-  //   photoUrl: '',
-  //   description: ''
-  // });
 
   addNewPhoto: Photo = {
     id: 10,
@@ -27,10 +18,9 @@ export class PhotosPageComponent {
     description: 'Wolf (Canis Lupus)'
   }
 
-  model = new Photo('', 'https://www.wildnatureimages.com/images/xl/050612-223-Wolf.jpg', 'Wolf (Canis Lupus)');
+  model = new Photo('', 'https://www.wildnatureimages.com/images/xl/050612-223-Wolf.jpg', '', 'Wolf (Canis Lupus)');
 
   constructor(
-    // private formBuilder: FormBuilder,
     private photoService: PhotoService,
   ) {}
 
