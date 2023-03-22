@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PhotoService } from '../photo.service';
 
 import { Photo } from '../photo';
@@ -8,7 +8,7 @@ import { Photo } from '../photo';
   templateUrl: './photos-page.component.html',
   styleUrls: ['./photos-page.component.scss']
 })
-export class PhotosPageComponent {
+export class PhotosPageComponent implements OnInit {
 
   photos: Photo[] = [];
 
@@ -23,6 +23,14 @@ export class PhotosPageComponent {
   constructor(
     private photoService: PhotoService,
   ) {}
+
+  ngOnInit(): void {
+    this.getPhotos();
+  }
+
+  getPhotos(): void {
+    this.photos = this.photoService.getPhotos();
+  }
 
   saveForm(): void{
     this.photoService.addPhoto(this.model);

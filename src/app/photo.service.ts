@@ -11,12 +11,12 @@ export class PhotoService {
 
   constructor() { }
 
-  addPhoto(photo: Photo) {
+  addPhoto(photo: Photo): void {
     this.photos.push(photo);
     console.log('current photoUrls: ', this.photos);
   }
 
-  getPhotos() {
+  getPhotos(): Photo[] {
     return this.photos;
   }
 }
