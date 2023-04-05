@@ -29,12 +29,13 @@ export class PhotosPageComponent implements OnInit {
   }
 
   getPhotos(): void {
-    this.photos = this.photoService.getPhotos();
+    this.photoService.getPhotos()
+      .subscribe(photos => this.photos = photos);
   }
 
   saveForm(): void{
     this.photoService.addPhoto(this.model);
     alert('you saved the form');
-    this.photos = this.photoService.getPhotos();
+    this.getPhotos();
   }
 }

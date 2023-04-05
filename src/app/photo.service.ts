@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { Photo } from 'src/app/photo';
+import { PHOTOS } from './mock-photos';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,7 +19,8 @@ export class PhotoService {
     console.log('current photoUrls: ', this.photos);
   }
 
-  getPhotos(): Photo[] {
-    return this.photos;
+  getPhotos(): Observable<Photo[]> {
+    const photos = of(PHOTOS)
+    return photos;
   }
 }
