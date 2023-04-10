@@ -1,6 +1,14 @@
 # PhotoGallery
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.0.
+This is a small-scale photo gallery application I built to familiarize myself with and practice using modern Angular. It currently uses an in-memory data service rather than a persistent layer or external api. 
+_Future features to include:_
+- persistent data layer
+- file drop or add functionality
+- external file storage service
+
+
+It was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.0.
+Basic Angular developer commands are included below for reference.
 
 ## Development server
 
