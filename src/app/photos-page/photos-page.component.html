@@ -10,7 +10,7 @@
         <label for="new-photo-name">Add Name</label>
         <input type="text" name="photoName" id="new-photo-name" [(ngModel)]="model.description"/>
     </div>
-    <button type="submit" [disabled]="!addNewPhoto.form.valid">Save</button>
+    <button type="submit" [disabled]="!model.url">Save</button>
 </form>
 
 <div class="photo-view">
