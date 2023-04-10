@@ -7,11 +7,14 @@ import { InMemoryDataService } from './in-memory-data.service';
 import { AppComponent } from './app.component';
 import { PhotosPageComponent } from './photos-page/photos-page.component';
 import { HttpClientModule } from '@angular/common/http';
+import { RoutingModule } from './routing.module';
+import { FileAddComponent } from './file-add/file-add.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PhotosPageComponent
+    PhotosPageComponent,
+    FileAddComponent
   ],
   imports: [
     BrowserModule,
@@ -24,6 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientInMemoryWebApiModule.forRoot(
       InMemoryDataService, { dataEncapsulation: false }
     ),
+     RoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
