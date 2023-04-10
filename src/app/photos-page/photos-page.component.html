@@ -1,13 +1,13 @@
 <div class="photo-view">
-    <h2>add new image</h2>
-    <form #addNewPhoto="ngForm" (ngSubmit)="saveForm()">
+    <h2>Add a New Image</h2>
+    <form class="form-control" #addNewPhoto="ngForm" (ngSubmit)="saveForm()">
 
-        <div>
-            <label for="add-photo-url">Add Photo Url</label>
+        <div class="form-group">
+            <label for="add-photo-url">Photo Url</label>
             <input type="url" name="photoUrl" id="add-photo-url" [(ngModel)]="model.url">
         </div>
-        <div>
-            <label for="new-photo-name">Add Name</label>
+        <div class="form-group">
+            <label for="new-photo-name">Photo Name or description</label>
             <input type="text" name="photoName" id="new-photo-name" [(ngModel)]="model.description"/>
         </div>
         <button type="submit" [disabled]="!model.url">Save</button>
@@ -21,7 +21,8 @@
 </div>
 <hr>
 <div *ngFor="let photo of photos" class="photo-view">
-    <span class="center">Photo {{photo.id}} </span><img src={{photo.url}} alt="your photo">
+    <span class="center">Photo {{photo.id}} </span>
     <p>{{photo.description}}</p>
+    <img src={{photo.url}} alt="your photo">
     <hr>
 </div>
