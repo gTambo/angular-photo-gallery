@@ -11,10 +11,15 @@ export class InMemoryDataService implements InMemoryDbService {
     const photos = [
       {
         id: 1,
+        url: '/assets/photos/Ansel-Adams-Denali-and-Wonder-Lake.webp',
+        description: 'Denali and Wonder Lake'
+      },
+      {
+        id: 2,
         url: 'https://www.wildnatureimages.com/images/xl/050612-223-Wolf.jpg',
         description: 'Wolf (Canis Lupus)'
       },{
-        id: 2,
+        id: 3,
         url: 'https://www.wildnatureimages.com/images/xl/080914-132-Grizzly-Bear.jpg',
         description: 'Grizzly Bear'
       }

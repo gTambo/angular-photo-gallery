@@ -1,31 +1,34 @@
-
-
-<form #addNewPhoto="ngForm" (ngSubmit)="saveForm()">
-
-    <div>
-        <label for="add-photo-url">Add Photo Url</label>
-        <input type="url" name="photoUrl" id="add-photo-url" [(ngModel)]="model.url">
-    </div>
-    <div>
-        <label for="new-photo-name">Add Name</label>
-        <input type="text" name="photoName" id="new-photo-name" [(ngModel)]="model.description"/>
-    </div>
-    <button type="submit" [disabled]="!model.url">Save</button>
-</form>
-
-<div class="photo-view">
+<!-- <div class="photo-view">
     <label for="photo-img">Denali and Wonder Lake</label>
     <img id="photo-img" src="/assets/photos/Ansel-Adams-Denali-and-Wonder-Lake.webp" alt="Denali and Wonder Lake" />
-</div>
+</div> -->
 
 
 <div class="photo-view">
     <h2>add new image</h2>
-    <input type="url" id="new-photo-url" [(ngModel)]="model.url" name="newPhotoUrl"/>
+    <!-- <input type="url" id="new-photo-url" [(ngModel)]="model.url" name="newPhotoUrl"/> -->
+    <form #addNewPhoto="ngForm" (ngSubmit)="saveForm()">
+
+        <div>
+            <label for="add-photo-url">Add Photo Url</label>
+            <input type="url" name="photoUrl" id="add-photo-url" [(ngModel)]="model.url">
+        </div>
+        <div>
+            <label for="new-photo-name">Add Name</label>
+            <input type="text" name="photoName" id="new-photo-name" [(ngModel)]="model.description"/>
+        </div>
+        <button type="submit" [disabled]="!model.url">Save</button>
+    </form>
     <h3>Preview</h3>
     <img src="{{model.url}}" alt="your image" />
 </div>
+<hr>
+<div class="photo-view">
+    <h2>Gallery</h2>
+</div>
+<hr>
 <div *ngFor="let photo of photos" class="photo-view">
-    Photo: <img src={{photo.url}} alt="your photo">
+    <span class="center">Photo {{photo.id}} </span><img src={{photo.url}} alt="your photo">
     <p>{{photo.description}}</p>
+    <hr>
 </div>

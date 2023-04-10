@@ -21,7 +21,7 @@ export class PhotosPageComponent implements OnInit {
     description: ''
   }
 
-  model = new Photo(this.newId, 'https://www.wildnatureimages.com/images/xl/050612-223-Wolf.jpg', '', 'Wolf (Canis Lupus)');
+  model = new Photo(this.newId, 'https://www.wildnatureimages.com/images/xl/080607-178-Great-Horned-Owl-nest.jpg', '', 'Great Horned Owl Nest');
 
   constructor(
     private photoService: PhotoService,
