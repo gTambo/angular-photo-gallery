@@ -20,7 +20,6 @@ export class PhotosPageComponent implements OnInit {
     url: '',
     description: ''
   }
-  // public gen = idMaker();
 
   model = new Photo(this.newId, 'https://www.wildnatureimages.com/images/xl/050612-223-Wolf.jpg', '', 'Wolf (Canis Lupus)');
 
@@ -30,7 +29,6 @@ export class PhotosPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPhotos();
-    // this.newId = this.photos.length + 1;
   }
 
   getPhotos(): void {
@@ -39,18 +37,7 @@ export class PhotosPageComponent implements OnInit {
   }
 
   saveForm(): void{
-    console.log(`Adding photo with id=${this.model.id} and url=${this.model.url}`);
     this.photoService.addPhoto(this.model)
       .subscribe(photo => this.photos.push(photo));
-    // alert('you saved the form');
-    // this.getPhotos();
   }
 }
-
-function* idMaker() {
-  let index = 3;
-  while (true) {
-    yield index++;
-  }
-}
-

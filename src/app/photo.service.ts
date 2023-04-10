@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Photo } from 'src/app/photo';
-import { PHOTOS } from './mock-photos';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
@@ -15,7 +14,6 @@ export class PhotoService {
   };
 
   private photosUrl = 'api/photos';
-  // photos: Photo[] = [];
 
   constructor(
     private http: HttpClient  
@@ -26,7 +24,6 @@ export class PhotoService {
       tap((newPhoto: Photo) => console.log(`added new photo with id=${newPhoto.id}`)),
       catchError(this.handleError<Photo>('addPhoto'))  
     );
-    // console.log('current photoUrls: ', this.photos);
   }
 
   getPhotos(): Observable<Photo[]> {
@@ -34,17 +31,15 @@ export class PhotoService {
       tap(_ => console.log('Fetched photos')),
       catchError(this.handleError<Photo[]>('getPhotos', []))  
     );
-    // const photos = of(PHOTOS)
-    // return photos;
   }
 
     /**
- * Handle Http operation that failed.
- * Let the app continue.
- *
- * @param operation - name of the operation that failed
- * @param result - optional value to return as the observable result
- */
+   * Handle Http operation that failed.
+   * Let the app continue.
+   *
+   * @param operation - name of the operation that failed
+   * @param result - optional value to return as the observable result
+   */
     private handleError<T>(operation = 'operation', result?: T) {
       return (error: any): Observable<T> => {
   
