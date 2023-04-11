@@ -11,6 +11,7 @@ import { RoutingModule } from './routing.module';
 import { FileAddComponent } from './file-add/file-add.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { MatIconModule } from '@angular/material/icon';
      RoutingModule,
      NoopAnimationsModule,
      MatIconModule,
+     MatProgressBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

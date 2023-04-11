@@ -20,7 +20,7 @@ export type ImgFile = {
 export class PhotoService {
 
   httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
 
   private photosUrl = 'api/photos';
@@ -31,14 +31,17 @@ export class PhotoService {
   ) { }
 
   addPhoto(photo: Photo): Observable<Photo> {
-    return this.http.post<Photo>(this.photosUrl, photo, this.httpOptions).pipe(
+  return this.http.post<Photo>(this.photosUrl, photo,  this.httpOptions).pipe(
       tap((newPhoto: Photo) => console.log(`added new photo with id=${newPhoto.id}`)),
       catchError(this.handleError<Photo>('addPhoto'))  
     );
   }
 
   addPhotoFile(dataFile: PhotoFile): Observable<ImgFile> {
-    return this.http.post<ImgFile>(this.filesUrl, { id: dataFile. id, thumbnail: dataFile.thumbnail}, this.httpOptions).pipe(
+    return this.http.post<ImgFile>(
+      this.filesUrl, { id: dataFile. id, thumbnail: dataFile.thumbnail}, { ...this.httpOptions, reportProgress: true,
+        }
+      ).pipe(
       tap((newFile: ImgFile) => console.log(`added new file with id=${newFile.id}`)),
       catchError(this.handleError<ImgFile>('addPhotoFile'))
     );
