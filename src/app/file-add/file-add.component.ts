@@ -16,9 +16,10 @@ export class FileAddComponent {
     private http: HttpClient
   ) {}
 
-  onFileSelected(event: any) {
+  onFileSelected(event: Event) {
 
-    const file:File = event.target.files[0];
+    const element = event.currentTarget as HTMLInputElement
+    let file: File | null = element.files![0];
 
     if (file) {
 

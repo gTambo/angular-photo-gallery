@@ -14,6 +14,7 @@ export class PhotoService {
   };
 
   private photosUrl = 'api/photos';
+  private filesUrl = 'api/files';
 
   constructor(
     private http: HttpClient  
@@ -23,6 +24,13 @@ export class PhotoService {
     return this.http.post<Photo>(this.photosUrl, photo, this.httpOptions).pipe(
       tap((newPhoto: Photo) => console.log(`added new photo with id=${newPhoto.id}`)),
       catchError(this.handleError<Photo>('addPhoto'))  
+    );
+  }
+
+  addPhotoFile(dataFile: { thumbnail: File }): Observable<File> {
+    return this.http.post<File>(this.filesUrl, dataFile.thumbnail, this.httpOptions).pipe(
+      tap((newFile: File) => console.log(`added new file ${newFile}`)),
+      catchError(this.handleError<File>('addPhotoFile'))
     );
   }
 
