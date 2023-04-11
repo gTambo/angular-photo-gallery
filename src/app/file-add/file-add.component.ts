@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { PhotoService } from '../photo.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-file-add',
@@ -7,4 +9,28 @@ import { Component } from '@angular/core';
 })
 export class FileAddComponent {
 
+  fileName = '';
+
+  constructor( 
+    private photoService: PhotoService,
+    private http: HttpClient
+  ) {}
+
+  onFileSelected(event: any) {
+
+    const file:File = event.target.files[0];
+
+    if (file) {
+
+        this.fileName = file.name;
+
+        const formData = new FormData();
+
+        formData.append("thumbnail", file);
+
+        const upload$ = this.http.post("/api/thumbnail-upload", formData);
+
+        upload$.subscribe();
+    }
+  }
 }

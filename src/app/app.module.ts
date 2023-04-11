@@ -9,6 +9,8 @@ import { PhotosPageComponent } from './photos-page/photos-page.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RoutingModule } from './routing.module';
 import { FileAddComponent } from './file-add/file-add.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,8 @@ import { FileAddComponent } from './file-add/file-add.component';
       InMemoryDataService, { dataEncapsulation: false }
     ),
      RoutingModule,
+     NoopAnimationsModule,
+     MatIconModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
