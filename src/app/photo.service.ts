@@ -4,6 +4,16 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { Photo } from 'src/app/photo';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+export interface PhotoFile extends FormData {
+  id: number,
+  thumbnail: File
+}
+export type ImgFile = {
+  id: number,
+  thumbnail: File
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -27,10 +37,10 @@ export class PhotoService {
     );
   }
 
-  addPhotoFile(dataFile: { thumbnail: File }): Observable<File> {
-    return this.http.post<File>(this.filesUrl, dataFile.thumbnail, this.httpOptions).pipe(
-      tap((newFile: File) => console.log(`added new file ${newFile}`)),
-      catchError(this.handleError<File>('addPhotoFile'))
+  addPhotoFile(dataFile: PhotoFile): Observable<ImgFile> {
+    return this.http.post<ImgFile>(this.filesUrl, { id: dataFile. id, thumbnail: dataFile.thumbnail}, this.httpOptions).pipe(
+      tap((newFile: ImgFile) => console.log(`added new file with id=${newFile.id}`)),
+      catchError(this.handleError<ImgFile>('addPhotoFile'))
     );
   }
 

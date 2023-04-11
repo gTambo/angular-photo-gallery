@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PhotoService } from '../photo.service';
+import { ImgFile, PhotoFile, PhotoService } from '../photo.service';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 export class FileAddComponent {
 
   fileName = '';
+  photoFiles: ImgFile[] = [];
 
   constructor( 
     private photoService: PhotoService,
@@ -28,10 +29,11 @@ export class FileAddComponent {
         const formData = new FormData();
 
         formData.append("thumbnail", file);
+        formData.append("id", '2');
 
-        const upload$ = this.http.post("/api/thumbnail-upload", formData);
+        const upload$ = this.photoService.addPhotoFile(formData as PhotoFile)
 
-        upload$.subscribe();
+        upload$.subscribe(photoFile => this.photoFiles.push(photoFile));
     }
   }
 }
