@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Photo } from 'src/app/photo';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpEventType, HttpEvent } from '@angular/common/http';
 
 export interface PhotoFile extends FormData {
   id: number,
   thumbnail: File
 }
-export type ImgFile = {
+export type ImgFile = HttpEvent<string> & {
   id: number,
   thumbnail: File
 }
@@ -37,12 +37,12 @@ export class PhotoService {
     );
   }
 
-  addPhotoFile(dataFile: PhotoFile): Observable<ImgFile> {
-    return this.http.post<ImgFile>(
-      this.filesUrl, { id: dataFile. id, thumbnail: dataFile.thumbnail}, { ...this.httpOptions, reportProgress: true,
+  addPhotoFile(dataFile: PhotoFile) {
+    return this.http.post(
+      this.filesUrl, { id: dataFile. id, thumbnail: dataFile.thumbnail}, { ...this.httpOptions, reportProgress: true, observe: 'events'
         }
       ).pipe(
-      tap((newFile: ImgFile) => console.log(`added new file with id=${newFile.id}`)),
+      tap((newFile: any) => console.log(`added new file ${newFile.body.id}`)),
       catchError(this.handleError<ImgFile>('addPhotoFile'))
     );
   }

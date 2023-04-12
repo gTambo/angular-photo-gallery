@@ -25,7 +25,7 @@ export class InMemoryDataService implements InMemoryDbService {
         description: 'Grizzly Bear'
       }
     ];
-    const files = [{ id: 1, thumbnail: '/sample.jpg'}];
+    const files = [{ id: 101, thumbnail: '/sample.jpg'}];
     return {photos, files };
   }
   // Overrides the genId method to ensure that a hero always has an id.

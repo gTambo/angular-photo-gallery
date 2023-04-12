@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "server": "node src/server/server.js"
   },
   "private": true,
   "dependencies": {
@@ -21,6 +22,11 @@
     "@angular/platform-browser-dynamic": "^15.2.0",
     "@angular/router": "^15.2.0",
     "angular-in-memory-web-api": "^0.15.0",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
+    "pg": "^8.10.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"

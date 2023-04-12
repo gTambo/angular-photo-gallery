@@ -27,9 +27,9 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
     // Remove it when a real server is ready to receive requests.
-    HttpClientInMemoryWebApiModule.forRoot(
-      InMemoryDataService, { dataEncapsulation: false }
-    ),
+    // HttpClientInMemoryWebApiModule.forRoot(
+    //   InMemoryDataService, { dataEncapsulation: false }
+    // ),
      RoutingModule,
      NoopAnimationsModule,
      MatIconModule,

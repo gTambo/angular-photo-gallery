@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ImgFile, PhotoFile, PhotoService } from '../photo.service';
-import { HttpClient, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpEventType, HttpHeaders } from '@angular/common/http';
 import { Subscription, finalize } from 'rxjs';
 
 @Component({
@@ -11,10 +11,14 @@ import { Subscription, finalize } from 'rxjs';
 export class FileAddComponent {
 
   fileName = '';
-  photoFiles: ImgFile[] = [];
+  photoFiles: any[] = [];
   uploadProgress: number | null = null;
   uploadSub: Subscription | null = null;
 
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+  };
+  
   constructor( 
     private photoService: PhotoService,
     private http: HttpClient
@@ -32,13 +36,15 @@ export class FileAddComponent {
       const formData = new FormData();
 
       formData.append("thumbnail", file);
-      formData.append("id", '2');
+      formData.append("id", '102');
 
-      // const upload$ = this.photoService.addPhotoFile(formData as PhotoFile)
+    //   const upload$ = this.photoService.addPhotoFile(formData as PhotoFile).pipe(
+    //     finalize(() => this.reset())
+    // );
 
       // upload$.subscribe(photoFile => this.photoFiles.push(photoFile));
 
-      const upload$ = this.http.post("/api/thumbnail-upload", formData, {
+      const upload$ = this.http.post("http://localhost:9000/alt-api/thumbnail-upload", formData, { ...this.httpOptions,
         reportProgress: true,
         observe: 'events'
       })
@@ -47,9 +53,11 @@ export class FileAddComponent {
       );
     
       this.uploadSub = upload$.subscribe(event => {
+        console.log("event.type ", event.type)
         if (event.type == HttpEventType.UploadProgress) {
           this.uploadProgress = Math.round(100 * (event.loaded / event.total!));
         }
+        this.photoFiles.push(event)
       })
     }
   }
