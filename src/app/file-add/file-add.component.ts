@@ -26,7 +26,7 @@ export class FileAddComponent {
 
   onFileSelected(event: Event) {
 
-    const element = event.currentTarget as HTMLInputElement
+    let element = event.currentTarget as HTMLInputElement
     let file: File | null = element.files![0];
 
     if (file) {
@@ -36,8 +36,8 @@ export class FileAddComponent {
       const formData = new FormData();
 
       formData.append("thumbnail", file);
-      formData.append("id", '102');
-      formData.append("name", file.name);
+      // formData.append("id", '102');
+      // formData.append("name", file.name);
 
     //   const upload$ = this.photoService.addPhotoFile(formData as PhotoFile).pipe(
     //     finalize(() => this.reset())
@@ -60,8 +60,22 @@ export class FileAddComponent {
         }
         this.photoFiles.push(event)
       })
+      
     }
+    
+    element.value = '';
   }
+
+  fetchFiles() {
+    return this.photoService.getPhotos()
+      .subscribe(files => {
+        let name = '';
+        let fileUrl = ''
+        for(let file of files){
+          name = file.thumbnail.name;
+      }})
+  }
+
   cancelUpload() {
     this.uploadSub!.unsubscribe();
     this.reset();

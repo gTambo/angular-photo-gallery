@@ -10,6 +10,7 @@ export interface PhotoFile extends FormData {
 }
 export type ImgFile = HttpEvent<string> & {
   id: number,
+  name: string,
   thumbnail: File
 }
 
@@ -53,6 +54,8 @@ export class PhotoService {
       catchError(this.handleError<Photo[]>('getPhotos', []))  
     );
   }
+
+  getPhotoFiles(files: )
 
     /**
    * Handle Http operation that failed.
