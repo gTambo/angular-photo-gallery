@@ -5,8 +5,18 @@ const express = require('express');
 const pool = require('./pool');
 const router = express.Router();
 
-router.post("/server/thumbnail-upload", (req, res) => {
-  let file = req.body['files'].thumbnail;
+router.get("/", (req, res) => {
+  pool.query(`SELECT * FROM "files";`).then( (result) => {
+    console.log("Fetching files ", result.rows);
+    res.send(result.rows);
+}).catch( error => {
+    console.log('Error getting files', error);
+   res.sendStatus(500); 
+});
+});
+
+router.post("/", (req, res) => {
+  let file = req['files'].thumbnail;
 
   console.log("File uploaded: ", file.name);
 

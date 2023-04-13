@@ -37,6 +37,7 @@ export class FileAddComponent {
 
       formData.append("thumbnail", file);
       formData.append("id", '102');
+      formData.append("name", file.name);
 
     //   const upload$ = this.photoService.addPhotoFile(formData as PhotoFile).pipe(
     //     finalize(() => this.reset())
@@ -44,7 +45,7 @@ export class FileAddComponent {
 
       // upload$.subscribe(photoFile => this.photoFiles.push(photoFile));
 
-      const upload$ = this.http.post("http://localhost:9000/alt-api/thumbnail-upload", formData, { ...this.httpOptions,
+      const upload$ = this.http.post("http://localhost:9000/alt-api/thumbnail-upload", formData, {
         reportProgress: true,
         observe: 'events'
       })
