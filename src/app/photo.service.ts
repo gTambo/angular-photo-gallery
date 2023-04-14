@@ -55,7 +55,12 @@ export class PhotoService {
     );
   }
 
-  getPhotoFiles(files: )
+  getPhotoFiles() {
+    return this.http.get(this.filesUrl).pipe(
+      tap(_ => console.log('Fetched files')),
+      catchError(this.handleError('getPhotoFiles', []))
+    );
+  }
 
     /**
    * Handle Http operation that failed.

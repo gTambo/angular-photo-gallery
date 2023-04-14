@@ -8,21 +8,21 @@ const router = express.Router();
 router.get("/", (req, res) => {
   pool.query(`SELECT * FROM "files";`).then( (result) => {
     console.log("Fetching files ", result.rows);
-    const files = result.rows.map(file => {
-      const fileObj = {
-        id: file.id,
-        name: file.name
-      }
-      if(file['photo-file']){
-        fileObj.file = file['photo-file'].blob();
-      }
-    });
-    console.log('new blob: ', files);
+    // const files = result.rows.map(file => {
+    //   const fileObj = {
+    //     id: file.id,
+    //     name: file.name
+    //   }
+    //   if(file['photo-file']){
+    //     fileObj.file = file['photo-file'].blob();
+    //   }
+    // });
+    // console.log('new blob: ', files);
     // .then(myBlob => {
     //   const imgUrl = URL.createObjectURL(myBlob) 
     //   return imgUrl;
     // });
-    res.send(files);
+    res.send(result.rows);
 }).catch( error => {
     console.log('Error getting files', error);
    res.sendStatus(500); 

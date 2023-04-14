@@ -1,17 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { ImgFile, PhotoFile, PhotoService } from '../photo.service';
 import { HttpClient, HttpEventType, HttpHeaders } from '@angular/common/http';
-import { Subscription, finalize } from 'rxjs';
+import { Observable, Subscription, catchError, finalize, tap } from 'rxjs';
 
 @Component({
   selector: 'app-file-add',
   templateUrl: './file-add.component.html',
   styleUrls: ['./file-add.component.scss']
 })
-export class FileAddComponent {
+export class FileAddComponent implements OnInit, DoCheck {
 
   fileName = '';
   photoFiles: any[] = [];
+  photoUrls: any[] = []
   uploadProgress: number | null = null;
   uploadSub: Subscription | null = null;
 
@@ -23,6 +24,36 @@ export class FileAddComponent {
     private photoService: PhotoService,
     private http: HttpClient
   ) {}
+
+  ngOnInit(): void {
+    this.fetchFiles();
+    this.createPhotoUrl(this.photoFiles);
+
+  }
+
+  ngDoCheck(): void {
+    // for(let i = 0; i < this.photoFiles.length; i++){
+    //   let fileUrl = URL.createObjectURL(this.photoFiles[i]['photo-file'])
+    //   this.photoUrls.push(fileUrl);
+    // }
+  }
+
+  createPhotoUrl = (filesArr: any[]) => {
+    
+    let currentFile = null;
+    for( let file = 1; file < filesArr.length; file++){
+      currentFile = new Blob(filesArr[file]['photo-file'].data)
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+        console.log(e.target.result);
+        this.photoUrls.push(e.target.result);
+      };
+
+      reader.readAsDataURL(currentFile);
+    }
+    
+  }
 
   onFileSelected(event: Event) {
 
@@ -58,7 +89,7 @@ export class FileAddComponent {
         if (event.type == HttpEventType.UploadProgress) {
           this.uploadProgress = Math.round(100 * (event.loaded / event.total!));
         }
-        this.photoFiles.push(event)
+        // this.photoFiles.push(event)
       })
       
     }
@@ -67,13 +98,25 @@ export class FileAddComponent {
   }
 
   fetchFiles() {
-    return this.photoService.getPhotos()
-      .subscribe(files => {
-        let name = '';
-        let fileUrl = ''
-        for(let file of files){
-          name = file.thumbnail.name;
-      }})
+    return this.http.get("http://localhost:9000/alt-api/thumbnail-upload")
+      .pipe(
+        tap(files => {
+        let names: any = this.getKeyByValue(files,'photo-file');
+        let keys = Object.entries(files);
+        // for(let file of files) {
+          console.log(`Files: ${JSON.stringify(files)}`);
+        // }
+        }),
+        catchError(err => {console.error(err); return err}))  
+    .subscribe(files => {
+        this.photoFiles = (files as any[]);
+        console.log(this.photoFiles)
+        this.createPhotoUrl(files as any[]);
+      })
+  }
+
+  getKeyByValue = (object: any, value: any) => {
+    return Object.keys(object).find(key => object[key] === value);
   }
 
   cancelUpload() {

@@ -11,6 +11,8 @@ import { RoutingModule } from './routing.module';
 import { FileAddComponent } from './file-add/file-add.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
@@ -33,6 +35,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
      RoutingModule,
      NoopAnimationsModule,
      MatIconModule,
+     MatInputModule,
+     MatFormFieldModule,
      MatProgressBarModule
   ],
   providers: [],
