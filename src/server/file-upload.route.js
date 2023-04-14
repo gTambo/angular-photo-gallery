@@ -5,9 +5,11 @@ const express = require('express');
 const pool = require('./pool');
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  pool.query(`SELECT * FROM "files";`).then( (result) => {
-    console.log("Fetching files ", result.rows);
+router.get("/:id", (req, res) => {
+  const id  = req.params.id;
+  const queryText = `SELECT * FROM "files" WHERE "id" = $1;`;
+  pool.query((queryText), [id]).then( (result) => {
+    console.log(`Fetching files with id=${id}`, result.rows[0].photoFile);
     // const files = result.rows.map(file => {
     //   const fileObj = {
     //     id: file.id,
@@ -22,7 +24,7 @@ router.get("/", (req, res) => {
     //   const imgUrl = URL.createObjectURL(myBlob) 
     //   return imgUrl;
     // });
-    res.send(result.rows);
+    res.send(result.rows[0].photoFile);
 }).catch( error => {
     console.log('Error getting files', error);
    res.sendStatus(500); 

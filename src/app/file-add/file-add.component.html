@@ -14,7 +14,7 @@
         <mat-icon color="primary">attach_file</mat-icon>
     </button>
 </div>
-{{photoUrls | json}}
+<!-- {{photoUrls | json}} -->
 <div>
     <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" *ngIf="uploadProgress">
     </mat-progress-bar>
@@ -22,7 +22,12 @@
     <mat-icon class="cancel-upload" (click)="cancelUpload()" 
             *ngIf="uploadProgress">delete_forever</mat-icon>
 </div>
-<div *ngFor="let file of photoFiles">
-    <p>{{file.name}}</p>
-    <img src="{{file['photo-file']}}" />
-</div>
+<!-- <div *ngFor="let file of photoFiles">
+    <p>Name: {{file.name}}</p>
+    <p>Id: {{file.id}}</p>
+    <div *ngIf="file['photo-file']">
+        Image: <img [src]="file['photo-file'].data" />
+    </div>
+</div> -->
+<img src="{{photoUrls[0]}}" alt="" />
+<div>{{photoUrls | json}}</div>

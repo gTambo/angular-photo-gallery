@@ -1,14 +1,14 @@
 import { Component, DoCheck, OnInit } from '@angular/core';
 import { ImgFile, PhotoFile, PhotoService } from '../photo.service';
 import { HttpClient, HttpEventType, HttpHeaders } from '@angular/common/http';
-import { Observable, Subscription, catchError, finalize, tap } from 'rxjs';
+import { Observable, Subscription, catchError, finalize, map, tap } from 'rxjs';
 
 @Component({
   selector: 'app-file-add',
   templateUrl: './file-add.component.html',
   styleUrls: ['./file-add.component.scss']
 })
-export class FileAddComponent implements OnInit, DoCheck {
+export class FileAddComponent implements OnInit {
 
   fileName = '';
   photoFiles: any[] = [];
@@ -26,32 +26,64 @@ export class FileAddComponent implements OnInit, DoCheck {
   ) {}
 
   ngOnInit(): void {
-    this.fetchFiles();
-    this.createPhotoUrl(this.photoFiles);
+    this.fetchFileById(2).subscribe(file => {
+      // const imageUrl = this.createImageFromBlob(file)
+      // this.photoUrls.push(imageUrl);
+      // console.log("image to show ", this.imageToShow, this.photoUrls);
+      this.createPhotoUrl(file);
+      console.log("image urls", this.photoUrls);
+    }, error => {
+      console.error(error);
+    });
+    // this.createPhotoUrl(this.photoFiles);
 
   }
 
-  ngDoCheck(): void {
+  imageToShow: any;
+
+createImageFromBlob(image: Blob) {
+   let reader = new FileReader();
+   reader.addEventListener("load", () => {
+      this.imageToShow = reader.result;
+   }, false);
+
+   if (image) {
+      reader.readAsDataURL(image);
+   }
+}
+
+// getImageFromService() {
+//   this.isImageLoading = true;
+//   this.imageService.getImage(yourImageUrl).subscribe(data => {
+//     this.createImageFromBlob(data);
+//     this.isImageLoading = false;
+//   }, error => {
+//     this.isImageLoading = false;
+//     console.log(error);
+//   });
+// }
+
+  // ngDoCheck(): void {
     // for(let i = 0; i < this.photoFiles.length; i++){
     //   let fileUrl = URL.createObjectURL(this.photoFiles[i]['photo-file'])
     //   this.photoUrls.push(fileUrl);
     // }
-  }
+  // }
 
-  createPhotoUrl = (filesArr: any[]) => {
+  createPhotoUrl = (image: Blob) => {
     
-    let currentFile = null;
-    for( let file = 1; file < filesArr.length; file++){
-      currentFile = new Blob(filesArr[file]['photo-file'].data)
+    // let currentFile = null;
+    // for( let file = 1; file < filesArr.length; file++){
+    //   currentFile = new Blob(filesArr[file]['photo-file'].data, {type: 'image/webp'})
       const reader = new FileReader();
 
       reader.onload = (e: any) => {
-        console.log(e.target.result);
+        console.log("In 'reader': ", e.target.result);
         this.photoUrls.push(e.target.result);
       };
 
-      reader.readAsDataURL(currentFile);
-    }
+      reader.readAsDataURL(image);
+    // }
     
   }
 
@@ -97,22 +129,13 @@ export class FileAddComponent implements OnInit, DoCheck {
     element.value = '';
   }
 
-  fetchFiles() {
-    return this.http.get("http://localhost:9000/alt-api/thumbnail-upload")
-      .pipe(
-        tap(files => {
-        let names: any = this.getKeyByValue(files,'photo-file');
-        let keys = Object.entries(files);
-        // for(let file of files) {
-          console.log(`Files: ${JSON.stringify(files)}`);
-        // }
-        }),
-        catchError(err => {console.error(err); return err}))  
-    .subscribe(files => {
-        this.photoFiles = (files as any[]);
-        console.log(this.photoFiles)
-        this.createPhotoUrl(files as any[]);
-      })
+  fetchFileById(id: number) {
+    return this.http.get("http://localhost:9000/alt-api/thumbnail-upload/" + id, { responseType: 'blob' })
+      // .pipe(
+      //   map(file => new Blob(file['photo-file'])
+      //   ),
+      //   catchError(err => {console.error(err); return err}))  
+    
   }
 
   getKeyByValue = (object: any, value: any) => {
