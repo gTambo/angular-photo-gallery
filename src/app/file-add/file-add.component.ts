@@ -1,4 +1,5 @@
-import { Component, DoCheck, OnInit } from '@angular/core';
+import { AfterViewInit, Component, DoCheck, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ImgFile, PhotoFile, PhotoService } from '../photo.service';
 import { HttpClient, HttpEventType, HttpHeaders } from '@angular/common/http';
 import { Observable, Subscription, catchError, finalize, map, tap } from 'rxjs';
@@ -8,13 +9,15 @@ import { Observable, Subscription, catchError, finalize, map, tap } from 'rxjs';
   templateUrl: './file-add.component.html',
   styleUrls: ['./file-add.component.scss']
 })
-export class FileAddComponent implements OnInit {
+export class FileAddComponent implements OnInit, AfterViewInit {
 
+  file: File | null = null;
   fileName = '';
   photoFiles: any[] = [];
-  photoUrls: any[] = []
+  photoUrl: any = '';
   uploadProgress: number | null = null;
   uploadSub: Subscription | null = null;
+  imageToShow$: any;
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -22,29 +25,40 @@ export class FileAddComponent implements OnInit {
   
   constructor( 
     private photoService: PhotoService,
-    private http: HttpClient
+    private http: HttpClient,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
-    this.fetchFileById(2).subscribe(file => {
-      // const imageUrl = this.createImageFromBlob(file)
-      // this.photoUrls.push(imageUrl);
-      // console.log("image to show ", this.imageToShow, this.photoUrls);
-      this.createPhotoUrl(file);
-      console.log("image urls", this.photoUrls);
-    }, error => {
-      console.error(error);
-    });
+    // this.fetchFileById(2).subscribe((file: any) => {
+    //   // const imageUrl = this.createImageFromBlob(file)
+    //   // this.photoUrls.push(imageUrl);
+    //   // console.log("image to show ", this.imageToShow$, this.photoUrls);
+    //   // this.createPhotoUrl(file);
+    //   console.log('file ', file);
+    //   this.photoUrls = file;
+    //   console.log("image urls", this.photoUrls);
+    //   catchError((err) => {console.error(err); return err})
+    // });
+    // this.imageToShow$ = this.sanitizer.bypassSecurityTrustResourceUrl(this.photoUrls[0]);
+    // console.log('Image to show ', this.imageToShow$);
+    
     // this.createPhotoUrl(this.photoFiles);
 
   }
 
-  imageToShow: any;
+  @ViewChild("fileUpload", { static: true })
+  input!: ElementRef;
+  ngAfterViewInit(): void {
+    console.log("after view init", this.input.nativeElement)
+  }
+
+  
 
 createImageFromBlob(image: Blob) {
    let reader = new FileReader();
    reader.addEventListener("load", () => {
-      this.imageToShow = reader.result;
+      this.imageToShow$ = reader.result;
    }, false);
 
    if (image) {
@@ -63,12 +77,14 @@ createImageFromBlob(image: Blob) {
 //   });
 // }
 
-  // ngDoCheck(): void {
+  ngDoCheck(): void {
+    // this.imageToShow$ = this.sanitizer.bypassSecurityTrustResourceUrl(this.photoUrls[0]);
+    // console.log('Image to show ', this.imageToShow$);
     // for(let i = 0; i < this.photoFiles.length; i++){
     //   let fileUrl = URL.createObjectURL(this.photoFiles[i]['photo-file'])
     //   this.photoUrls.push(fileUrl);
     // }
-  // }
+  }
 
   createPhotoUrl = (image: Blob) => {
     
@@ -79,7 +95,7 @@ createImageFromBlob(image: Blob) {
 
       reader.onload = (e: any) => {
         console.log("In 'reader': ", e.target.result);
-        this.photoUrls.push(e.target.result);
+        // this.photoUrls.push(e.target.result);
       };
 
       reader.readAsDataURL(image);
@@ -90,51 +106,67 @@ createImageFromBlob(image: Blob) {
   onFileSelected(event: Event) {
 
     let element = event.currentTarget as HTMLInputElement
-    let file: File | null = element.files![0];
+    this.file = element.files![0];
 
-    if (file) {
-
-      this.fileName = file.name;
-
-      const formData = new FormData();
-
-      formData.append("thumbnail", file);
-      // formData.append("id", '102');
-      // formData.append("name", file.name);
-
-    //   const upload$ = this.photoService.addPhotoFile(formData as PhotoFile).pipe(
-    //     finalize(() => this.reset())
-    // );
-
-      // upload$.subscribe(photoFile => this.photoFiles.push(photoFile));
-
-      const upload$ = this.http.post("http://localhost:9000/alt-api/thumbnail-upload", formData, {
-        reportProgress: true,
-        observe: 'events'
-      })
-      .pipe(
-          finalize(() => this.reset())
-      );
-    
-      this.uploadSub = upload$.subscribe(event => {
-        console.log("event.type ", event.type)
-        if (event.type == HttpEventType.UploadProgress) {
-          this.uploadProgress = Math.round(100 * (event.loaded / event.total!));
-        }
-        // this.photoFiles.push(event)
-      })
-      
+    console.log("selected: ", element.value)
+    const reader = new FileReader();
+    if(element){
+      reader.readAsDataURL(element.files![0]);
     }
-    
-    element.value = '';
+    reader.onload = (e: any) => {
+        console.log("In 'reader': ", e.target.result);
+        this.photoUrl = reader.result;
+      };
+
+      
   }
 
-  fetchFileById(id: number) {
+  onUploadFile() {
+    this.input.nativeElement.value = ''
+
+    // if (this.file) {
+
+    //   this.fileName = this.file.name;
+
+    //   const formData = new FormData();
+
+    //   formData.append("thumbnail", this.file);
+    //   // formData.append("id", '102');
+    //   // formData.append("name", file.name);
+
+    // //   const upload$ = this.photoService.addPhotoFile(formData as PhotoFile).pipe(
+    // //     finalize(() => this.reset())
+    // // );
+
+    //   // upload$.subscribe(photoFile => this.photoFiles.push(photoFile));
+
+    //   const upload$ = this.http.post("http://localhost:9000/alt-api/thumbnail-upload", formData, {
+    //     reportProgress: true,
+    //     observe: 'events'
+    //   })
+    //   .pipe(
+    //       finalize(() => this.reset())
+    //   );
+    
+    //   this.uploadSub = upload$.subscribe(event => {
+    //     console.log("event.type ", event.type)
+    //     if (event.type == HttpEventType.UploadProgress) {
+    //       this.uploadProgress = Math.round(100 * (event.loaded / event.total!));
+    //     }
+    //     // this.photoFiles.push(event)
+    //   })
+      
+    // }
+  }
+
+  fetchFileById(id: number): Observable<any>{
     return this.http.get("http://localhost:9000/alt-api/thumbnail-upload/" + id, { responseType: 'blob' })
-      // .pipe(
-      //   map(file => new Blob(file['photo-file'])
-      //   ),
-      //   catchError(err => {console.error(err); return err}))  
+      .pipe(
+        map((response) => {
+          const urlToBlob = window.URL.createObjectURL(response) // get a URL for the blob
+          return this.sanitizer.bypassSecurityTrustResourceUrl(urlToBlob);
+        }),
+        catchError(err => {console.error(err); return err}))  
     
   }
 

@@ -13,8 +13,12 @@
     <button type="button" mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
         <mat-icon color="primary">attach_file</mat-icon>
     </button>
+    <button (click)="onUploadFile()">Upload</button>
 </div>
-<!-- {{photoUrls | json}} -->
+<div class="image-preview-container">
+    Image Preview: <img *ngIf="photoUrl" [src]="photoUrl" alt="" />
+</div>
+{{photoUrl | json}}
 <div>
     <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" *ngIf="uploadProgress">
     </mat-progress-bar>
@@ -29,5 +33,4 @@
         Image: <img [src]="file['photo-file'].data" />
     </div>
 </div> -->
-<img src="{{photoUrls[0]}}" alt="" />
-<div>{{photoUrls | json}}</div>
+

@@ -4,6 +4,9 @@
 const express = require('express');
 const pool = require('./pool');
 const router = express.Router();
+const fs = require('fs');
+const path = require('path');
+
 
 router.get("/:id", (req, res) => {
   const id  = req.params.id;
@@ -24,7 +27,14 @@ router.get("/:id", (req, res) => {
     //   const imgUrl = URL.createObjectURL(myBlob) 
     //   return imgUrl;
     // });
-    res.send(result.rows[0].photoFile);
+    const imageName = "image.webp"
+    const imagePath = path.join(__dirname, "images", imageName);
+
+    fs.exists(imagePath, exists => {
+        if (exists) res.sendFile(imagePath);
+        else res.status(400).send(`Error: Image does not exists at , ${imagePath}`);
+    });
+    // res.send(result.rows[0].photoFile);
 }).catch( error => {
     console.log('Error getting files', error);
    res.sendStatus(500); 
