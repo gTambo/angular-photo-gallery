@@ -12,7 +12,8 @@ router.get("/:id", (req, res) => {
   const id  = req.params.id;
   const queryText = `SELECT * FROM "files" WHERE "id" = $1;`;
   pool.query((queryText), [id]).then( (result) => {
-    console.log(`Fetching files with id=${id}`, result.rows[0].photoFile);
+    console.log(`Fetching files with id=${id}`, result.rows[0]);
+/** Probably not needed */
     // const files = result.rows.map(file => {
     //   const fileObj = {
     //     id: file.id,
@@ -27,14 +28,15 @@ router.get("/:id", (req, res) => {
     //   const imgUrl = URL.createObjectURL(myBlob) 
     //   return imgUrl;
     // });
-    const imageName = "image.webp"
-    const imagePath = path.join(__dirname, "images", imageName);
+/** yet another method that is probably not needed */
+    // const imageName = "image.webp"
+    // const imagePath = path.join(__dirname, "images", imageName);
 
-    fs.exists(imagePath, exists => {
-        if (exists) res.sendFile(imagePath);
-        else res.status(400).send(`Error: Image does not exists at , ${imagePath}`);
-    });
-    // res.send(result.rows[0].photoFile);
+    // fs.exists(imagePath, exists => {
+    //     if (exists) res.sendFile(imagePath);
+    //     else res.status(400).send(`Error: Image does not exists at , ${imagePath}`);
+    // });
+    res.send(result.rows[0]);
 }).catch( error => {
     console.log('Error getting files', error);
    res.sendStatus(500); 
@@ -43,24 +45,25 @@ router.get("/:id", (req, res) => {
 
 router.post("/", (req, res) => {
   let file = req['files'].thumbnail;
+  const fileName = file.name;
+  const fileType = file.mimetype;
+  // const binFile = Buffer.from(file.data);
+  console.log(`File uploading: name = ${fileName}, type =  ${fileType}`);
 
-  console.log("File uploading: ", file.name);
-
-  const query = `INSERT INTO "files" ("name", "photo-file") 
-        VALUES ($1, $2)
-        RETURNING "id"
+  const query = `INSERT INTO "files" ("name", "photoFile", "type") 
+        VALUES ($1, $2, $3)
+        RETURNING *
   ;`;
 
-  pool.query(query, [file.name, file]).then(result => {
-    console.log('post response: ', result);
-    res.send(result.rows[0])
-  }).catch((err) => {
-    console.log('Error in post: ', err);
-    res.sendStatus(500);
-  });
-  // setTimeout(() => {
-  //   res.status(200).json({message: 'File uploaded successfully.'});
-  // }, 4000);
+  setTimeout(() => {
+    pool.query(query, [fileName, file, fileType]).then(result => {
+      console.log('post response: ', result);
+      res.send(result.rows[0])
+    }).catch((err) => {
+      console.log('Error in post: ', err);
+      res.sendStatus(500);
+    });
+  }, 3500);
 });
 
 // const onFileupload = (req, res) => {

@@ -26,6 +26,7 @@
     <mat-icon class="cancel-upload" (click)="cancelUpload()" 
             *ngIf="uploadProgress">delete_forever</mat-icon>
 </div>
+Image to show <img [src]="imageToShow$" alt="">
 <!-- <div *ngFor="let file of photoFiles">
     <p>Name: {{file.name}}</p>
     <p>Id: {{file.id}}</p>
