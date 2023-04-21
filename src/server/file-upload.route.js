@@ -4,39 +4,29 @@
 const express = require('express');
 const pool = require('./pool');
 const router = express.Router();
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
+const { promises } = require('dns');
 
+async function readFile(filePath) {
+  try {
+    const data = await fs.readFile(filePath);
+    // console.log(data.toString());
+  } catch (error) {
+    console.error(`Got an error trying to read the file: ${error.message}`);
+  }
+}
 
 router.get("/:id", (req, res) => {
   const id  = req.params.id;
   const queryText = `SELECT * FROM "files" WHERE "id" = $1;`;
   pool.query((queryText), [id]).then( (result) => {
-    console.log(`Fetching files with id=${id}`, result.rows[0]);
-/** Probably not needed */
-    // const files = result.rows.map(file => {
-    //   const fileObj = {
-    //     id: file.id,
-    //     name: file.name
-    //   }
-    //   if(file['photo-file']){
-    //     fileObj.file = file['photo-file'].blob();
-    //   }
-    // });
-    // console.log('new blob: ', files);
-    // .then(myBlob => {
-    //   const imgUrl = URL.createObjectURL(myBlob) 
-    //   return imgUrl;
-    // });
-/** yet another method that is probably not needed */
-    // const imageName = "image.webp"
-    // const imagePath = path.join(__dirname, "images", imageName);
-
-    // fs.exists(imagePath, exists => {
-    //     if (exists) res.sendFile(imagePath);
-    //     else res.status(400).send(`Error: Image does not exists at , ${imagePath}`);
-    // });
-    res.send(result.rows[0]);
+    console.log(`Fetching files with id=${id}`, result.rows);
+    const returnedFile = result.rows[0];
+    // returnedFile.photoFile = writeFile(returnedFile.photoFile);
+    const fileToSend ={ photoFile: new Blob(returnedFile.photoFile, {type: returnedFile.type}), name: returnedFile.name, type: returnedFile.type };
+    console.log('res photo file ', fileToSend);
+    res.send(fileToSend);
 }).catch( error => {
     console.log('Error getting files', error);
    res.sendStatus(500); 
@@ -79,3 +69,27 @@ router.post("/", (req, res) => {
 // }
 
 module.exports = router;
+
+/** Probably not needed */
+    // const files = result.rows.map(file => {
+    //   const fileObj = {
+    //     id: file.id,
+    //     name: file.name
+    //   }
+    //   if(file['photo-file']){
+    //     fileObj.file = file['photo-file'].blob();
+    //   }
+    // });
+    // console.log('new blob: ', files);
+    // .then(myBlob => {
+    //   const imgUrl = URL.createObjectURL(myBlob) 
+    //   return imgUrl;
+    // });
+/** yet another method that is probably not needed */
+    // const imageName = "image.webp"
+    // const imagePath = path.join(__dirname, "images", imageName);
+
+    // fs.exists(imagePath, exists => {
+    //     if (exists) res.sendFile(imagePath);
+    //     else res.status(400).send(`Error: Image does not exists at , ${imagePath}`);
+    // });
