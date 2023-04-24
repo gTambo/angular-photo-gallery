@@ -9,7 +9,7 @@ import {
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ImgFile, PhotoFile, PhotoService } from '../photo.service';
 import { HttpClient, HttpEventType, HttpHeaders } from '@angular/common/http';
-import { Observable, Subscription, catchError, finalize, map, tap, concat } from 'rxjs';
+import { Observable, Subscription, catchError, finalize, map, tap, concat, scan, pipe } from 'rxjs';
 
 @Component({
   selector: 'app-file-add',
@@ -17,6 +17,7 @@ import { Observable, Subscription, catchError, finalize, map, tap, concat } from
   styleUrls: ['./file-add.component.scss'],
 })
 export class FileAddComponent implements OnInit, AfterViewInit {
+  isImageLoading = false;
   file: File | null = null;
   fileName = '';
   fileType = '';
@@ -39,24 +40,22 @@ export class FileAddComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.fetchFileById(1).subscribe(async (file: any) => {
-      this.photoFile = await file;
+    // this.getImageFromService();
+    // this.fetchFileById('Ansel-Adams-Denali-and-Wonder-Lake').subscribe(async (file: any) => {
+    //   this.photoFile = await file;
 
-      // const newPhoto = new Blob(this.photoFile, { type: this.fileType })
-      this.receivedImageData = this.photoFile.photoFile;
-      console.log('received Image Data is: ', this.receivedImageData);
-      // const urlToBlob = URL.createObjectURL(this.receivedImageData);
-      // this.imageToShow$ = this.sanitizer.bypassSecurityTrustResourceUrl(urlToBlob);
-      this.createPhotoUrl(this.receivedImageData);
-      this.fileType = file.type;
-      this.newFileName = file.name;
-      // this.imageToShow$ = file['changingThisBreaksApplicationSecurity'];
-      console.log('Image: stuff', this.photoFile, `Image Data = ${this.receivedImageData}, image type = ${this.fileType}, name = ${this.newFileName}, URL: ${this.imageToShow$}`); 
-      catchError((err) => {console.error(err); return err})
-    });
-    // this.imageToShow$ = this.sanitizer.bypassSecurityTrustResourceUrl(this.photoUrls[0]);
-    // console.log('Image to show ', this.imageToShow$);
-    // this.createPhotoUrl(this.photoFiles);
+    //   // const newPhoto = new Blob(this.photoFile, { type: this.fileType })
+    //   this.receivedImageData = this.photoFile.photoFile;
+    //   console.log('received Image Data is: ', this.receivedImageData);
+    //   // const urlToBlob = URL.createObjectURL(this.receivedImageData);
+    //   // this.imageToShow$ = this.sanitizer.bypassSecurityTrustResourceUrl(urlToBlob);
+    //   // this.createPhotoUrl(this.receivedImageData);
+    //   // this.fileType = file.type;
+    //   // this.newFileName = file.name;
+    //   // this.imageToShow$ = file['changingThisBreaksApplicationSecurity'];
+    //   console.log('Image: stuff', this.photoFile, `Image Data = ${this.receivedImageData}, image type = ${this.fileType}, name = ${this.newFileName}, URL: ${this.imageToShow$}`); 
+    //   catchError((err) => {console.error(err); return err})
+    // });
   }
 
   @ViewChild('fileUpload', { static: true })
@@ -80,24 +79,19 @@ export class FileAddComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // getImageFromService() {
-  //   this.isImageLoading = true;
-  //   this.imageService.getImage(yourImageUrl).subscribe(data => {
-  //     this.createImageFromBlob(data);
-  //     this.isImageLoading = false;
-  //   }, error => {
-  //     this.isImageLoading = false;
-  //     console.log(error);
-  //   });
-  // }
-
-  ngDoCheck(): void {
-    // this.imageToShow$ = this.sanitizer.bypassSecurityTrustResourceUrl(this.photoUrls[0]);
-    // console.log('Image to show ', this.imageToShow$);
-    // for(let i = 0; i < this.photoFiles.length; i++){
-    //   let fileUrl = URL.createObjectURL(this.photoFiles[i]['photo-file'])
-    //   this.photoUrls.push(fileUrl);
-    // }
+  getImageFromService() {
+    this.isImageLoading = true;
+    return this.http
+    .get('http://localhost:9000/alt-api/thumbnail-upload/', {responseType: 'json'})
+    .subscribe(res => console.log('this is the response', res))
+      // data => {
+      //   this.createImageFromBlob(data);
+      //   this.isImageLoading = false;
+      // }, error => {
+      //   this.isImageLoading = false;
+      //   console.log(error);
+      // }
+    // );
   }
 
   createPhotoUrl = (image: any) => {
@@ -140,32 +134,35 @@ export class FileAddComponent implements OnInit, AfterViewInit {
       const formData = new FormData();
 
       formData.append("thumbnail", this.file);
+      formData.append("<NAME>", this.fileName);
 
       console.log(`form data: ${formData.get('thumbnail')}, and file type: ${this.file.type}`);
-      const upload$ = this.http.post("http://localhost:9000/alt-api/thumbnail-upload", formData, {
-        reportProgress: true,
-        observe: 'events'
-      })
+      const upload$ = this.http.post("http://localhost:9000/alt-api/thumbnail-upload", formData 
+        // {
+        //   reportProgress: true,
+        //   observe: 'events'
+        // }
+      )
       .pipe(
           finalize(() => this.reset())
       );
 
-      this.uploadSub = upload$.subscribe(event => {
-        console.log("event.type ", event.type)
-        if (event.type == HttpEventType.UploadProgress) {
-          this.uploadProgress = Math.round(100 * (event.loaded / event.total!));
-        }
+      // this.uploadSub = upload$.subscribe(event => {
+      //   console.log("event.type ", event.type)
+      //   if (event.type == HttpEventType.UploadProgress) {
+      //     this.uploadProgress = Math.round(100 * (event.loaded / event.total!));
+      //   }
         // this.photoFiles.push(event)
-      })
+      // })
 
     }
     this.input.nativeElement.value = '';
 
   }
 
-  fetchFileById(id: number): Observable<any> {
+  fetchFileById(fileName: string): Observable<any> {
     return this.http
-      .get('http://localhost:9000/alt-api/thumbnail-upload/' + id, {responseType: 'json'})
+      .get('http://localhost:9000/alt-api/thumbnail-upload/' + fileName, {responseType: 'json'})
       // .pipe(
       //   map((response) => {
       //     const urlToBlob = window.URL.createObjectURL(response)

@@ -5,7 +5,7 @@
 // import { onFileupload } from './file-upload.route';
 const express = require('express');
 const onFileupload = require('./file-upload.route');
-const fileUpload = require('express-fileupload');
+// const fileUpload = require('express-fileupload');
 const bodyParser = require( 'body-parser' );
 const PORT = 9000;
 const pool = require('./pool');
@@ -16,7 +16,7 @@ const cors = require('cors');
 
 app.use(cors({origin: true}));
 
-app.use(fileUpload());
+// app.use(fileUpload());
 
 // Used for POST requests so that we can access req.body
 app.use(bodyParser.json());
