@@ -30,12 +30,8 @@
 <div class="image-preview-container">
     Image to show <img [src]="imageToShow$" height="300"  alt="">
 </div>
-
-<!-- <div *ngFor="let file of photoFiles">
-    <p>Name: {{file.name}}</p>
-    <p>Id: {{file.id}}</p>
-    <div *ngIf="file['photo-file']">
-        Image: <img [src]="file['photo-file'].data" />
-    </div>
-</div> -->
+<!-- Image: <img src="assets/photos/050612-100-Grizzly-Bear.webp" /> -->
+<div *ngFor="let file of photoUrls">
+        Image: <img [src]="file" height="400" />
+</div>
 

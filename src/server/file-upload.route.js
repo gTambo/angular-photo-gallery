@@ -30,10 +30,11 @@ router.post('/upload', upload.single('thumbnail'), async (req, res) => {
       contentType: file.mimetype,
       image: Buffer.from(encode_image, 'base64')
   };
+  const filepathForDB = file.path.replace('src/', '');
   try {
     const result = await pool.query(
       'INSERT INTO "files" ("name", "url", "type", "photoFile") VALUES ($1, $2, $3, $4) RETURNING id;', 
-      [file.originalname, file.path, file.mimetype, finalImg]
+      [file.originalname, filepathForDB, file.mimetype, finalImg]
       );
     console.log(result.rows);
     res.status(200).send({message: `File uploaded and inserted into database with id: ${result.rows[0].id}`})
@@ -43,23 +44,29 @@ router.post('/upload', upload.single('thumbnail'), async (req, res) => {
   }
 })
 
-router.get('/:filename', (req, res) => {
-  const filename = req.params.filename;
-  const filepath = path.join(__dirname, '../assets/photos/', filename);
-  res.sendFile(filepath);
-});
-
 router.get('/', (req, res) => {
   try{
     pool.query(
       `SELECT * FROM "files";`
       ).then(result => {
+        console.log('retrieved data: ', result.rows)
+        // const photos = result.rows;
+        // const sendPhotos = [];
+        // for(let i of photos){
+        //   const filename = photos[i].name;
+        // }
         res.send(result.rows);
       });
   } catch (err) {
     console.error(err);
     res.status(500).send('error fetching files');
   }
+});
+
+router.get('/:filename', (req, res) => {
+  const filename = req.params.filename;
+  const filepath = path.join(__dirname, '../assets/photos/', filename);
+  res.sendFile(filepath);
 });
 
 

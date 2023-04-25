@@ -25,6 +25,7 @@ export class FileAddComponent implements OnInit, AfterViewInit {
   photoFile: any = null;
   receivedImageData: any = '';
   photoUrl: any = '';
+  photoUrls: any[] = [];
   uploadProgress: number | null = null;
   uploadSub: Subscription | null = null;
   imageToShow$: any;
@@ -40,21 +41,15 @@ export class FileAddComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    // this.getImageFromService();
-    this.fetchFileById('4b9b8fb1f64e1fca4bd42e0c5af2fd2b').subscribe(async (fileUrl: any) => {
+    this.fetchAllImageUrls().subscribe((res: any) => {
+      for(let item of res){
+        this.photoUrls.push(item.url)
+      }
+      console.log(`the photoUrls: ${this.photoUrls}`);
+    });
+    this.fetchFileById('556c0b390cf12772d411474b0b4d028d').subscribe(async (fileUrl: any) => {
       this.imageToShow$ = await fileUrl;
       console.log('Image url: ', this.imageToShow$);
-      
-      // const newPhoto = new Blob(this.photoFile, { type: this.fileType })
-      // this.receivedImageData = this.photoFile.photoFile;
-      // console.log('received Image Data is: ', this.receivedImageData);
-      // const urlToBlob = URL.createObjectURL(this.receivedImageData);
-      // this.imageToShow$ = this.sanitizer.bypassSecurityTrustResourceUrl(urlToBlob);
-      // this.createPhotoUrl(this.receivedImageData);
-      // this.fileType = file.type;
-      // this.newFileName = file.name;
-      // this.imageToShow$ = file['changingThisBreaksApplicationSecurity'];
-      // console.log('Image: stuff', this.photoFile, `Image Data = ${this.receivedImageData}, image type = ${this.fileType}, name = ${this.newFileName}, URL: ${this.imageToShow$}`); 
       catchError((err) => {console.error(err); return err})
     });
   }
@@ -65,50 +60,32 @@ export class FileAddComponent implements OnInit, AfterViewInit {
     console.log('after view init', this.input.nativeElement);
   }
 
-  createImageFromBlob(image: Blob) {
-    let reader = new FileReader();
-    reader.addEventListener(
-      'load',
-      () => {
-        this.imageToShow$ = reader.result;
-      },
-      false
-    );
-
-    if (image) {
-      reader.readAsDataURL(image);
-    }
-  }
-
-  getImageFromService() {
-    this.isImageLoading = true;
+  fetchAllImageUrls(): Observable<any>{
+    // this.isImageLoading = true;
     return this.http
-    .get('http://localhost:9000/alt-api/thumbnail-upload/', {responseType: 'json'})
-    .subscribe(res => console.log('this is the response', res))
-      // data => {
-      //   this.createImageFromBlob(data);
-      //   this.isImageLoading = false;
-      // }, error => {
-      //   this.isImageLoading = false;
-      //   console.log(error);
-      // }
-    // );
+    .get<any[]>('http://localhost:9000/alt-api/thumbnail-upload/', {responseType: 'json'})
+    .pipe(
+      tap(response => console.log(response)),
+      // map((response) => {
+      //   for(let item of response) {
+      //     console.log('url', item.url)
+      //   }
+      // }),
+      catchError(err => {console.log(err); return err})
+      );
   }
 
-  createPhotoUrl = (image: any) => {
-    // let currentFile = null;
-    // for( let file = 1; file < filesArr.length; file++){
-    //   currentFile = new Blob(filesArr[file]['photo-file'].data, {type: 'image/webp'})
-    const reader = new FileReader();
-
-    reader.onload = (e: any) => {
-      console.log("In 'reader': ", e.target.result);
-      this.imageToShow$ = reader.result;
-    };
-
-    reader.readAsDataURL(image);
-    // }
-  };
+  fetchFileById(fileName: string): Observable<any> {
+    return this.http
+      .get('http://localhost:9000/alt-api/thumbnail-upload/' + fileName, {responseType: 'blob'})
+      .pipe(
+        map((response) => {
+          const urlToBlob = window.URL.createObjectURL(response)
+          return this.sanitizer.bypassSecurityTrustResourceUrl(urlToBlob);
+        }),
+        catchError(err => {console.error(err); return err}))  
+    
+  }
 
   onFileSelected(event: Event) {
     let element = event.currentTarget as HTMLInputElement;
@@ -161,16 +138,37 @@ export class FileAddComponent implements OnInit, AfterViewInit {
 
   }
 
-  fetchFileById(fileName: string): Observable<any> {
-    return this.http
-      .get('http://localhost:9000/alt-api/thumbnail-upload/' + fileName, {responseType: 'blob'})
-      .pipe(
-        map((response) => {
-          const urlToBlob = window.URL.createObjectURL(response)
-          return this.sanitizer.bypassSecurityTrustResourceUrl(urlToBlob);
-        }),
-        catchError(err => {console.error(err); return err}))  
-    
+  createPhotoUrl = (filesArr: any) => {
+    const newArr: (string | ArrayBuffer | null)[] = []
+    let currentFile = null;
+    for( let file = 0; file < filesArr.length; file++){
+      currentFile = new Blob(filesArr[file]['photoFile'].data, {type: 'image/webp'})
+    const reader = new FileReader();
+
+    reader.onload = (e: any) => {
+      console.log("In 'reader': ", e.target.result);
+      const newUrl = reader.result;
+      newArr.push(newUrl);
+    };
+
+    reader.readAsDataURL(currentFile);
+    }
+    return newArr;
+  };
+
+  createImageFromBlob(image: Blob) {
+    let reader = new FileReader();
+    reader.addEventListener(
+      'load',
+      () => {
+        this.imageToShow$ = reader.result;
+      },
+      false
+    );
+
+    if (image) {
+      reader.readAsDataURL(image);
+    }
   }
 
   getKeyByValue = (object: any, value: any) => {
