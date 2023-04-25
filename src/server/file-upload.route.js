@@ -49,5 +49,18 @@ router.get('/:filename', (req, res) => {
   res.sendFile(filepath);
 });
 
+router.get('/', (req, res) => {
+  try{
+    pool.query(
+      `SELECT * FROM "files";`
+      ).then(result => {
+        res.send(result.rows);
+      });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('error fetching files');
+  }
+});
+
 
 module.exports = router;

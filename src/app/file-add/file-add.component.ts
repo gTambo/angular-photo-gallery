@@ -41,21 +41,22 @@ export class FileAddComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     // this.getImageFromService();
-    // this.fetchFileById('Ansel-Adams-Denali-and-Wonder-Lake').subscribe(async (file: any) => {
-    //   this.photoFile = await file;
-
-    //   // const newPhoto = new Blob(this.photoFile, { type: this.fileType })
-    //   this.receivedImageData = this.photoFile.photoFile;
-    //   console.log('received Image Data is: ', this.receivedImageData);
-    //   // const urlToBlob = URL.createObjectURL(this.receivedImageData);
-    //   // this.imageToShow$ = this.sanitizer.bypassSecurityTrustResourceUrl(urlToBlob);
-    //   // this.createPhotoUrl(this.receivedImageData);
-    //   // this.fileType = file.type;
-    //   // this.newFileName = file.name;
-    //   // this.imageToShow$ = file['changingThisBreaksApplicationSecurity'];
-    //   console.log('Image: stuff', this.photoFile, `Image Data = ${this.receivedImageData}, image type = ${this.fileType}, name = ${this.newFileName}, URL: ${this.imageToShow$}`); 
-    //   catchError((err) => {console.error(err); return err})
-    // });
+    this.fetchFileById('4b9b8fb1f64e1fca4bd42e0c5af2fd2b').subscribe(async (fileUrl: any) => {
+      this.imageToShow$ = await fileUrl;
+      console.log('Image url: ', this.imageToShow$);
+      
+      // const newPhoto = new Blob(this.photoFile, { type: this.fileType })
+      // this.receivedImageData = this.photoFile.photoFile;
+      // console.log('received Image Data is: ', this.receivedImageData);
+      // const urlToBlob = URL.createObjectURL(this.receivedImageData);
+      // this.imageToShow$ = this.sanitizer.bypassSecurityTrustResourceUrl(urlToBlob);
+      // this.createPhotoUrl(this.receivedImageData);
+      // this.fileType = file.type;
+      // this.newFileName = file.name;
+      // this.imageToShow$ = file['changingThisBreaksApplicationSecurity'];
+      // console.log('Image: stuff', this.photoFile, `Image Data = ${this.receivedImageData}, image type = ${this.fileType}, name = ${this.newFileName}, URL: ${this.imageToShow$}`); 
+      catchError((err) => {console.error(err); return err})
+    });
   }
 
   @ViewChild('fileUpload', { static: true })
@@ -162,13 +163,13 @@ export class FileAddComponent implements OnInit, AfterViewInit {
 
   fetchFileById(fileName: string): Observable<any> {
     return this.http
-      .get('http://localhost:9000/alt-api/thumbnail-upload/' + fileName, {responseType: 'json'})
-      // .pipe(
-      //   map((response) => {
-      //     const urlToBlob = window.URL.createObjectURL(response)
-      //     return this.sanitizer.bypassSecurityTrustResourceUrl(urlToBlob);
-      //   }),
-      //   catchError(err => {console.error(err); return err}))  
+      .get('http://localhost:9000/alt-api/thumbnail-upload/' + fileName, {responseType: 'blob'})
+      .pipe(
+        map((response) => {
+          const urlToBlob = window.URL.createObjectURL(response)
+          return this.sanitizer.bypassSecurityTrustResourceUrl(urlToBlob);
+        }),
+        catchError(err => {console.error(err); return err}))  
     
   }
 
