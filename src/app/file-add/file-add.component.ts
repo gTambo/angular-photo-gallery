@@ -134,10 +134,10 @@ export class FileAddComponent implements OnInit, AfterViewInit {
       const formData = new FormData();
 
       formData.append("thumbnail", this.file);
-      formData.append("<NAME>", this.fileName);
+      formData.append("photoFile", this.fileName);
 
-      console.log(`form data: ${formData.get('thumbnail')}, and file type: ${this.file.type}`);
-      const upload$ = this.http.post("http://localhost:9000/alt-api/thumbnail-upload", formData 
+      console.log(`form data: ${formData.get('thumbnail')}, and file type: ${this.file.type}, and name: ${formData.get('photoFile')}`);
+      const upload$ = this.http.post("http://localhost:9000/alt-api/thumbnail-upload/upload", formData
         // {
         //   reportProgress: true,
         //   observe: 'events'
@@ -147,16 +147,16 @@ export class FileAddComponent implements OnInit, AfterViewInit {
           finalize(() => this.reset())
       );
 
-      // this.uploadSub = upload$.subscribe(event => {
-      //   console.log("event.type ", event.type)
-      //   if (event.type == HttpEventType.UploadProgress) {
-      //     this.uploadProgress = Math.round(100 * (event.loaded / event.total!));
-      //   }
+      this.uploadSub = upload$.subscribe(event => {
+        console.log("event.type ", event)
+        // if (event.type == HttpEventType.UploadProgress) {
+        //   this.uploadProgress = Math.round(100 * (event.loaded / event.total!));
+        // }
         // this.photoFiles.push(event)
-      // })
+      })
 
+      this.input.nativeElement.value = '';
     }
-    this.input.nativeElement.value = '';
 
   }
 
