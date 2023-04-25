@@ -1,0 +1,24 @@
+.file-input {
+display: none;
+}
+
+.file-upload {
+display: flex;
+align-items: flex-end;
+}
+
+.upload-btn {
+margin-left: 10px;
+margin-bottom:15px;
+}
+
+.progress-bar {
+margin-bottom: 10px;
+}
+
+.image-preview-container img {
+    display: block;
+    height: 300px;
+    margin: 1.5rem;
+    background-color: #aaaaaa;
+}

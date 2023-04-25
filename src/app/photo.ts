@@ -2,7 +2,7 @@ export class Photo {
     constructor(
         public id: number,
         public url: string,
-        public filepath?: string,
+        public file?: File | string,
         public description?: string
     ) {}
 }

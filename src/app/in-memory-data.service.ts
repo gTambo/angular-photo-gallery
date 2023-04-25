@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { InMemoryDbService } from 'angular-in-memory-web-api';
 import { Photo } from './photo';
+import { PhotoFile, ImgFile } from './photo.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,14 +25,15 @@ export class InMemoryDataService implements InMemoryDbService {
         description: 'Grizzly Bear'
       }
     ];
-    return {photos};
+    const files = [{ id: 101, thumbnail: '/sample.jpg'}];
+    return {photos, files };
   }
   // Overrides the genId method to ensure that a hero always has an id.
   // If the heroes array is empty,
   // the method below returns the initial number (11).
   // if the heroes array is not empty, the method below returns the highest
   // hero id + 1.
-  genId(photos: Photo[]): number {
+  genId(photos: Photo[] | ImgFile[]): number {
     return photos.length > 0 ? Math.max(...photos.map(photo => photo.id)) + 1 : 11;
   }
 }

@@ -9,6 +9,11 @@ import { PhotosPageComponent } from './photos-page/photos-page.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RoutingModule } from './routing.module';
 import { FileAddComponent } from './file-add/file-add.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -24,10 +29,15 @@ import { FileAddComponent } from './file-add/file-add.component';
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
     // Remove it when a real server is ready to receive requests.
-    HttpClientInMemoryWebApiModule.forRoot(
-      InMemoryDataService, { dataEncapsulation: false }
-    ),
+    // HttpClientInMemoryWebApiModule.forRoot(
+    //   InMemoryDataService, { dataEncapsulation: false }
+    // ),
      RoutingModule,
+     NoopAnimationsModule,
+     MatIconModule,
+     MatInputModule,
+     MatFormFieldModule,
+     MatProgressBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
